@@ -19,7 +19,7 @@ body {
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: serif;
+  font-family: 'Tangerine' serif;
   position: absolute;
   width: 80%;
   left: 10%;
@@ -58,7 +58,7 @@ body {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
   text-align:center;
-  font-size: 36pt;
+  font-size: 24pt;
   font-weight: bold;
   display:flex;
   flex-direction: row;
@@ -135,6 +135,11 @@ body {
   font-size:18pt;
 }
 
+.song-card-button {
+  float:right;
+  font-size:18pt;
+}
+
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;
   border-width: 0px;
@@ -157,7 +162,7 @@ body {
   display:flex;
   align-items: center;
   font-size: 24pt;
-  height:20%;
+  height:80%;
 }
 
 input {

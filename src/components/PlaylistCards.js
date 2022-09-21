@@ -15,12 +15,14 @@ export default class PlaylistCards extends React.Component {
                 <div id="playlist-cards">
                     {
                         currentList.songs.map((song, index) => (
+                        <div key={'playlist-song-' + (index+1)} className='list-card' className='unselected-list-card'>
                             <SongCard
                                 id={'playlist-song-' + (index+1)}
                                 key={'playlist-song-' + (index+1)}
                                 song={song}
                                 moveCallback={moveSongCallback}
                             />
+                        </div>
                         ))
                     }
                 </div>

@@ -230,6 +230,18 @@ class App extends React.Component {
         }
         this.setStateWithUpdatedList(list);
     }
+
+    // Handle add song event ->
+    handleAddSong = () => {
+        let list = this.state.currentList;
+
+        if (list != null) {
+            list.songs.push({title: "Untitled", artist: "Unknown", youTubeId: "dQw4w9WgXcQ"})
+        }
+        this.setStateWithUpdatedList(list);
+    }
+
+
     // THIS FUNCTION ADDS A MoveSong_Transaction TO THE TRANSACTION STACK
     addMoveSongTransaction = (start, end) => {
         let transaction = new MoveSong_Transaction(this, start, end);
@@ -293,6 +305,7 @@ class App extends React.Component {
                     renameListCallback={this.renameList}
                 />
                 <EditToolbar
+                    onAddSong={this.handleAddSong}
                     canAddSong={canAddSong}
                     canUndo={canUndo}
                     canRedo={canRedo}
