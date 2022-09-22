@@ -89,7 +89,7 @@ export default class SongCard extends React.Component {
                     type="button"
                     id={"delete-song-" + num}
                     className="song-card-button"
-                    // onClick={}
+                    onClick={() => this.props.onRemoveSong(num-1)}
                     value={"X"} />
             </div>
         )

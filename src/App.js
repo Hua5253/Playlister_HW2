@@ -231,6 +231,15 @@ class App extends React.Component {
         this.setStateWithUpdatedList(list);
     }
 
+    handleRemoveSong = (index) => {
+        let list = this.state.currentList;
+
+        if (list != null) {
+            list.songs.splice(index, 1);
+            this.setStateWithUpdatedList(list);
+        } 
+    }
+
     // Handle add song event ->
     handleAddSong = () => {
         let list = this.state.currentList;
@@ -316,7 +325,8 @@ class App extends React.Component {
                 />
                 <PlaylistCards
                     currentList={this.state.currentList}
-                    moveSongCallback={this.addMoveSongTransaction} />
+                    moveSongCallback={this.addMoveSongTransaction} 
+                    onRemoveSong={this.handleRemoveSong} />
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteListModal
