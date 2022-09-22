@@ -159,7 +159,6 @@ body {
 }
 
 .playlister-song, .playlister-song-dragged-to { 
-  display:flex;
   align-items: center;
   font-size: 24pt;
   height:80%;
