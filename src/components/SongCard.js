@@ -62,8 +62,9 @@ export default class SongCard extends React.Component {
         const { song } = this.props;
         let link = "https://www.youtube.com/watch?v=" + song.youTubeId;
         let num = this.getItemNum();
-        let songKeyNamePair = {key: num-1, name: song.title}
-        console.log("num: " + num);
+        let songKeyNamePair = {key: num-1, name: song.title};
+        let songKeyPair = {key: num-1, song: song};
+        // console.log("num: " + num);
         let itemClass = "playlister-song";
         if (this.state.draggedTo) {
             itemClass = "playlister-song-dragged-to";
@@ -78,6 +79,7 @@ export default class SongCard extends React.Component {
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
                 draggable="true"
+                onDoubleClick={() => this.props.onEditSong(songKeyPair)}
             >
                 <span
                     id={"song-card-text-" + num}

@@ -19,7 +19,7 @@ body {
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: 'Tangerine' serif;
+  font-family: 'Tangerine', serif;
   position: absolute;
   width: 80%;
   left: 10%;
@@ -302,6 +302,21 @@ span {
 
 .modal p + p {
   margin-top: 1rem;
+}
+
+#edit-title-span {
+  float:right;
+  font-size:24pt;
+}
+
+#edit-artist-span {
+  float:right;
+  font-size:24pt;
+}
+
+#edit-ID-span {
+  float:right;
+  font-size:24pt;
 }
 
 /* ANIMATIONS

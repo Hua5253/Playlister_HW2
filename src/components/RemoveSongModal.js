@@ -9,27 +9,27 @@ export default class RemoveSongModal extends Component {
         }
         return (
             <div 
-                class="modal" 
+                className="modal" 
                 id="remove-song-modal" 
                 data-animation="slideInOutLeft">
-                    <div class="modal-root" id='verify-remove-song-root'>
-                        <div class="modal-north">
+                    <div className="modal-root" id='verify-remove-song-root'>
+                        <div className="modal-north">
                             Remove Song?
                         </div>
-                        <div class="modal-center">
-                            <div class="modal-center-content">
+                        <div className="modal-center">
+                            <div className="modal-center-content">
                                 Are you sure you wish to permanently remove {name} from the playlist?
                             </div>
                         </div>
-                        <div class="modal-south">
+                        <div className="modal-south">
                             <input type="button" 
                                 id="remove-song-confirm-button" 
-                                class="modal-button" 
+                                className="modal-button" 
                                 onClick={onRemoveSong}
                                 value='Confirm' />
                             <input type="button" 
                                 id="remove-song-cancel-button" 
-                                class="modal-button" 
+                                className="modal-button" 
                                 onClick={onHideRemoveSongModal}
                                 value='Cancel' />
                         </div>
