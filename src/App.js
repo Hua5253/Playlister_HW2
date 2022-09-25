@@ -41,7 +41,7 @@ class App extends React.Component {
         // SETUP THE INITIAL STATE
         this.state = {
             listKeyPairMarkedForDeletion : null,
-            songKeyNamePairMarkedForRemove: null,
+            songKeyMarked: 0,
             songKeyPairMarkedForEdit: null,
             currentList : null,
             sessionData : loadedSessionData
@@ -80,7 +80,7 @@ class App extends React.Component {
         // SHOULD BE DONE VIA ITS CALLBACK
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            songKeyNamePairMarkedForRemove: prevState.songKeyNamePairMarkedForRemove,
+            songKeyMarked: prevState.songKeyMarked,
             songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
             currentList: newList,
             sessionData: {
@@ -119,7 +119,7 @@ class App extends React.Component {
         // AND FROM OUR APP STATE
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : null,
-            songKeyNamePairMarkedForRemove: null,
+            songKeyMarked: 0,
             songKeyPairMarkedForEdit: null,
             currentList: newCurrentList,
             sessionData: {
@@ -165,7 +165,7 @@ class App extends React.Component {
 
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : null,
-            songKeyNamePairMarkedForRemove: null,
+            songKeyMarked: 0,
             sessionData: {
                 nextKey: prevState.sessionData.nextKey,
                 counter: prevState.sessionData.counter,
@@ -185,7 +185,7 @@ class App extends React.Component {
         let newCurrentList = this.db.queryGetList(key);
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            songKeyNamePairMarkedForRemove: null,
+            songKeyMarked: 0,
             songKeyPairMarkedForEdit: null,
             currentList: newCurrentList,
             sessionData: this.state.sessionData
@@ -199,7 +199,7 @@ class App extends React.Component {
     closeCurrentList = () => {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            songKeyNamePairMarkedForRemove: null,
+            songKeyMarked: 0,
             songKeyPairMarkedForEdit: null,
             currentList: null,
             sessionData: this.state.sessionData
@@ -212,7 +212,7 @@ class App extends React.Component {
     setStateWithUpdatedList(list) {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            songKeyNamePairMarkedForRemove: prevState.songKeyNamePairMarkedForRemove,
+            songKeyMarked: prevState.songKeyMarked,
             songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
             currentList : list,
             sessionData : this.state.sessionData
@@ -366,7 +366,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,
-            songKeyNamePairMarkedForRemove: songKeyNamePair,
+            songKeyMarked: songKeyNamePair,
             songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
             sessionData: prevState.sessionData
         }), () => {
@@ -379,7 +379,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,
-            songKeyNamePairMarkedForRemove: prevState.songKeyNamePairMarkedForRemove,
+            songKeyMarked: prevState.songKeyMarked,
             songKeyPairMarkedForEdit: songKeyPair,
             sessionData: prevState.sessionData
         }), () => {
@@ -391,7 +391,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion : keyPair,
-            songKeyNamePairMarkedForRemove: prevState.songKeyNamePairMarkedForRemove,
+            songKeyMarked: prevState.songKeyMarked,
             songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
             sessionData: prevState.sessionData
         }), () => {
@@ -474,9 +474,10 @@ class App extends React.Component {
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                     deleteListCallback={this.deleteMarkedList}
                 />
-                <RemoveSongModal 
+                <RemoveSongModal
+                    currentList={this.state.currentList}
                     onRemoveSong={this.addRemoveSongTransaction}
-                    keyNamePair={this.state.songKeyNamePairMarkedForRemove}
+                    songKey={this.state.songKeyMarked}
                     onHideRemoveSongModal={this.hideRemoveSongModal}
                 />
                 <EditSongModal 

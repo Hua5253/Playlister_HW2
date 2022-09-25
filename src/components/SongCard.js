@@ -62,7 +62,7 @@ export default class SongCard extends React.Component {
         const { song } = this.props;
         let link = "https://www.youtube.com/watch?v=" + song.youTubeId;
         let num = this.getItemNum();
-        let songKeyNamePair = {key: num-1, name: song.title};
+        let songKey = {key: num-1};
         let songKeyPair = {key: num-1, song: song};
         // console.log("num: " + num);
         let itemClass = "playlister-song";
@@ -92,7 +92,7 @@ export default class SongCard extends React.Component {
                     type="button"
                     id={"delete-song-" + num}
                     className="song-card-button"
-                    onClick={() => this.props.onRemoveSong(songKeyNamePair)}
+                    onClick={() => this.props.onRemoveSong(songKey)}
                     value={"X"} />
             </div>
         )

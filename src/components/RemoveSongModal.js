@@ -2,11 +2,10 @@ import React, {Component} from "react";
 
 export default class RemoveSongModal extends Component {
     render() {
-        const { keyNamePair, onRemoveSong, onHideRemoveSongModal } = this.props;
-        let name = "";
-        if (keyNamePair) {
-            name = keyNamePair.name;
-        }
+        const { songKey, currentList, onRemoveSong, onHideRemoveSongModal } = this.props;
+        if (!currentList) return null;
+        
+        let index = songKey.key;
         return (
             <div 
                 className="modal" 
@@ -18,14 +17,14 @@ export default class RemoveSongModal extends Component {
                         </div>
                         <div className="modal-center">
                             <div className="modal-center-content">
-                                Are you sure you wish to permanently remove {name} from the playlist?
+                                Are you sure you wish to permanently remove {currentList.songs[index] === undefined ? "" : currentList.songs[index].title} from the playlist?
                             </div>
                         </div>
                         <div className="modal-south">
                             <input type="button" 
                                 id="remove-song-confirm-button" 
                                 className="modal-button" 
-                                onClick={() => onRemoveSong(keyNamePair.key)}
+                                onClick={() => onRemoveSong(index)}
                                 value='Confirm' />
                             <input type="button" 
                                 id="remove-song-cancel-button" 
