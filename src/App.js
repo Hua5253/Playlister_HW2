@@ -20,6 +20,8 @@ import SidebarList from './components/SidebarList.js';
 import Statusbar from './components/Statusbar.js';
 import RemoveSongModal from './components/RemoveSongModal';
 import EditSongModal from './components/EditSongModal';
+import AddSong_Transaction from './transactions/AddSong_Transaction';
+import RemoveSong_Transaction from './transactions/RemoveSong_Transaction';
 
 class App extends React.Component {
     constructor(props) {
@@ -30,6 +32,8 @@ class App extends React.Component {
 
         // THIS WILL TALK TO LOCAL STORAGE
         this.db = new DBManager();
+
+        this.removedSongs = [];
 
         // GET THE SESSION DATA FROM OUR DATA MANAGER
         let loadedSessionData = this.db.queryGetSessionData();
@@ -249,15 +253,26 @@ class App extends React.Component {
     // handle remove song event ->
     handleRemoveSong = (index) => {
         let list = this.state.currentList;
+        this.removedSongs.push(list.songs[index]);
 
         if (list != null) 
             list.songs.splice(index, 1);
 
         this.setStateWithUpdatedList(list);
+        this.hideRemoveSongModal();
     }
 
-    removeMarkedSong = () => {
-        this.handleRemoveSong(this.state.songKeyNamePairMarkedForRemove.key);
+    // redo remove song transaction ->
+    redoRemoveSong = (index) => {
+        let list = this.state.currentList;
+
+        let song = this.removedSongs.pop();
+        list.songs.splice(index, 0, song);
+        this.setStateWithUpdatedList(list);
+    }
+
+    removeMarkedSong = (index) => {
+        this.handleRemoveSong(index);
         this.hideRemoveSongModal();
     }
 
@@ -303,12 +318,30 @@ class App extends React.Component {
         this.setStateWithUpdatedList(list);
     }
 
+    redoAddSong() {
+        let list = this.state.currentList;
+
+        list.songs.pop();
+        this.setStateWithUpdatedList(list);
+    }
+
 
     // THIS FUNCTION ADDS A MoveSong_Transaction TO THE TRANSACTION STACK
     addMoveSongTransaction = (start, end) => {
         let transaction = new MoveSong_Transaction(this, start, end);
         this.tps.addTransaction(transaction);
     }
+
+    addAddSongTransaction = () => {
+        let transaction = new AddSong_Transaction(this);
+        this.tps.addTransaction(transaction);
+    }
+
+    addRemoveSongTransaction = (index) => {
+        let transaction = new RemoveSong_Transaction(this, index)
+        this.tps.addTransaction(transaction);
+    }
+
     // THIS FUNCTION BEGINS THE PROCESS OF PERFORMING AN UNDO
     undo = () => {
         if (this.tps.hasTransactionToUndo()) {
@@ -419,7 +452,7 @@ class App extends React.Component {
                     renameListCallback={this.renameList}
                 />
                 <EditToolbar
-                    onAddSong={this.handleAddSong}
+                    onAddSong={this.addAddSongTransaction}
                     canAddSong={canAddSong}
                     canUndo={canUndo}
                     canRedo={canRedo}
@@ -442,7 +475,7 @@ class App extends React.Component {
                     deleteListCallback={this.deleteMarkedList}
                 />
                 <RemoveSongModal 
-                    onRemoveSong={this.removeMarkedSong}
+                    onRemoveSong={this.addRemoveSongTransaction}
                     keyNamePair={this.state.songKeyNamePairMarkedForRemove}
                     onHideRemoveSongModal={this.hideRemoveSongModal}
                 />

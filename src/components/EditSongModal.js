@@ -8,7 +8,7 @@ export default class EditSongModal extends Component {
     }
 
     handleEditSong = (event) => {
-        let newSong = {title: this.state.newTitle, artist: this.state.newArtist, youTubeId: this.state.newYouTubeID}
+        let newSong = {title: this.state.newTitle, artist: this.state.newArtist, youTubeId: this.state.newYouTubeID};
 
         event.stopPropagation();
         this.props.editSongCallback(this.props.songKeyPair.key, newSong);

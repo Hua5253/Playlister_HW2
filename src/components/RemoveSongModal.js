@@ -25,7 +25,7 @@ export default class RemoveSongModal extends Component {
                             <input type="button" 
                                 id="remove-song-confirm-button" 
                                 className="modal-button" 
-                                onClick={onRemoveSong}
+                                onClick={() => onRemoveSong(keyNamePair.key)}
                                 value='Confirm' />
                             <input type="button" 
                                 id="remove-song-cancel-button" 
