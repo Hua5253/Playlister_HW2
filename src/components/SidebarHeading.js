@@ -11,6 +11,7 @@ export default class SidebarHeading extends React.Component {
                 <input 
                     type="button" 
                     id="add-list-button" 
+                    disabled={!this.props.canAddList}
                     className="toolbar-button" 
                     onClick={this.handleClick}
                     value="+" />

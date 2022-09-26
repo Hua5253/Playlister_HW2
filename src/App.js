@@ -7,9 +7,14 @@ import jsTPS from './common/jsTPS.js';
 
 // OUR TRANSACTIONS
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
+import AddSong_Transaction from './transactions/AddSong_Transaction';
+import RemoveSong_Transaction from './transactions/RemoveSong_Transaction';
+import EditSong_Transaction from './transactions/EditSong_Transaction';
 
 // THESE REACT COMPONENTS ARE MODALS
 import DeleteListModal from './components/DeleteListModal.js';
+import RemoveSongModal from './components/RemoveSongModal';
+import EditSongModal from './components/EditSongModal';
 
 // THESE REACT COMPONENTS ARE IN OUR UI
 import Banner from './components/Banner.js';
@@ -18,10 +23,6 @@ import PlaylistCards from './components/PlaylistCards.js';
 import SidebarHeading from './components/SidebarHeading.js';
 import SidebarList from './components/SidebarList.js';
 import Statusbar from './components/Statusbar.js';
-import RemoveSongModal from './components/RemoveSongModal';
-import EditSongModal from './components/EditSongModal';
-import AddSong_Transaction from './transactions/AddSong_Transaction';
-import RemoveSong_Transaction from './transactions/RemoveSong_Transaction';
 
 class App extends React.Component {
     constructor(props) {
@@ -42,7 +43,6 @@ class App extends React.Component {
         this.state = {
             listKeyPairMarkedForDeletion : null,
             songKeyMarked: 0,
-            songKeyPairMarkedForEdit: null,
             currentList : null,
             sessionData : loadedSessionData
         }
@@ -81,7 +81,6 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             songKeyMarked: prevState.songKeyMarked,
-            songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
             currentList: newList,
             sessionData: {
                 nextKey: prevState.sessionData.nextKey + 1,
@@ -120,7 +119,6 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : null,
             songKeyMarked: 0,
-            songKeyPairMarkedForEdit: null,
             currentList: newCurrentList,
             sessionData: {
                 nextKey: prevState.sessionData.nextKey,
@@ -186,7 +184,6 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             songKeyMarked: 0,
-            songKeyPairMarkedForEdit: null,
             currentList: newCurrentList,
             sessionData: this.state.sessionData
         }), () => {
@@ -200,7 +197,6 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             songKeyMarked: 0,
-            songKeyPairMarkedForEdit: null,
             currentList: null,
             sessionData: this.state.sessionData
         }), () => {
@@ -213,7 +209,6 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             songKeyMarked: prevState.songKeyMarked,
-            songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
             currentList : list,
             sessionData : this.state.sessionData
         }), () => {
@@ -271,11 +266,6 @@ class App extends React.Component {
         this.setStateWithUpdatedList(list);
     }
 
-    removeMarkedSong = (index) => {
-        this.handleRemoveSong(index);
-        this.hideRemoveSongModal();
-    }
-
     // handle edit song event ->
     handleEditSong = (key, song) => {
         let list = this.state.currentList;
@@ -301,6 +291,7 @@ class App extends React.Component {
         }
 
         this.setStateWithUpdatedList(list);
+        this.hideEditSongModal();
     }
 
     editMarkedSong = (key, song) => {
@@ -338,7 +329,12 @@ class App extends React.Component {
     }
 
     addRemoveSongTransaction = (index) => {
-        let transaction = new RemoveSong_Transaction(this, index)
+        let transaction = new RemoveSong_Transaction(this, index);
+        this.tps.addTransaction(transaction);
+    }
+
+    addEditSongTransaction = (index, tempSong, song) => {
+        let transaction = new EditSong_Transaction(this, index, tempSong, song);
         this.tps.addTransaction(transaction);
     }
 
@@ -362,12 +358,11 @@ class App extends React.Component {
     }
 
     // mark song for remove ->
-    markSongForRemove = (songKeyNamePair) => {
+    markSongForRemove = (songKey) => {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,
-            songKeyMarked: songKeyNamePair,
-            songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
+            songKeyMarked: songKey,
             sessionData: prevState.sessionData
         }), () => {
             this.showRemoveSongModal();
@@ -375,12 +370,11 @@ class App extends React.Component {
     }
 
     // mark song for edit ->
-    markSongForEdit = (songKeyPair) => {
+    markSongForEdit = (songKey) => {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,
-            songKeyMarked: prevState.songKeyMarked,
-            songKeyPairMarkedForEdit: songKeyPair,
+            songKeyMarked: songKey,
             sessionData: prevState.sessionData
         }), () => {
             this.showEditSongModal();
@@ -392,7 +386,6 @@ class App extends React.Component {
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion : keyPair,
             songKeyMarked: prevState.songKeyMarked,
-            songKeyPairMarkedForEdit: prevState.songKeyPairMarkedForEdit,
             sessionData: prevState.sessionData
         }), () => {
             // PROMPT THE USER
@@ -434,6 +427,7 @@ class App extends React.Component {
     }
 
     render() {
+        let canAddList = this.state.currentList === null;
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
         let canRedo = this.tps.hasTransactionToRedo();
@@ -442,6 +436,7 @@ class App extends React.Component {
             <div id="root">
                 <Banner />
                 <SidebarHeading
+                    canAddList={canAddList}
                     createNewListCallback={this.createNewList}
                 />
                 <SidebarList
@@ -481,8 +476,9 @@ class App extends React.Component {
                     onHideRemoveSongModal={this.hideRemoveSongModal}
                 />
                 <EditSongModal 
-                editSongCallback={this.editMarkedSong}
-                songKeyPair={this.state.songKeyPairMarkedForEdit}
+                currentList={this.state.currentList}
+                onEditSong={this.addEditSongTransaction}
+                songKey={this.state.songKeyMarked}
                 onHideEditSongModal={this.hideEditSongModal}
                 />
             </div>
