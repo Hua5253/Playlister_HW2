@@ -44,7 +44,8 @@ class App extends React.Component {
             listKeyPairMarkedForDeletion : null,
             songKeyMarked: 0,
             currentList : null,
-            sessionData : loadedSessionData
+            sessionData : loadedSessionData,
+            isModalOpen: false
         }
     }
     sortKeyNamePairsByName = (keyNamePairs) => {
@@ -397,33 +398,49 @@ class App extends React.Component {
     showDeleteListModal() {
         let modal = document.getElementById("delete-list-modal");
         modal.classList.add("is-visible");
-    }
-    // THIS FUNCTION IS FOR HIDING THE MODAL
-    hideDeleteListModal() {
-        let modal = document.getElementById("delete-list-modal");
-        modal.classList.remove("is-visible");
+        this.setState({isModalOpen: true});
     }
 
     // show Remove Song Modal ->
     showRemoveSongModal = () => {
         let modal = document.getElementById("remove-song-modal");
         modal.classList.add("is-visible");
+        this.setState({isModalOpen: true});
     }
 
     showEditSongModal = () => {
         let modal = document.getElementById("edit-song-modal");
         modal.classList.add("is-visible");
+        this.setState({isModalOpen: true});
+    }
+
+    // THIS FUNCTION IS FOR HIDING THE MODAL
+    hideDeleteListModal = () => {
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
+        this.setState({isModalOpen: false})
     }
 
     // hide remove song modal ->
     hideRemoveSongModal = () => {
         let modal = document.getElementById("remove-song-modal");
         modal.classList.remove("is-visible");
+        this.setState({isModalOpen: false});
     }
 
     hideEditSongModal = () => {
         let modal = document.getElementById("edit-song-modal");
         modal.classList.remove("is-visible");
+        this.setState({isModalOpen: false});
+    }
+
+    shortCut = () => {
+        function keyPress(event, app) {
+                if (event.key === "z" && (event.ctrlKey || event.metaKey)) app.undo()
+                if (event.key === "y" && event.ctrlKey) app.redo();
+        }
+
+        document.onkeydown = (event) => keyPress(event, this);
     }
 
     render() {
@@ -432,6 +449,9 @@ class App extends React.Component {
         let canUndo = this.tps.hasTransactionToUndo();
         let canRedo = this.tps.hasTransactionToRedo();
         let canClose = this.state.currentList !== null;
+
+        this.shortCut();
+
         return (
             <div id="root">
                 <Banner />
@@ -447,6 +467,8 @@ class App extends React.Component {
                     renameListCallback={this.renameList}
                 />
                 <EditToolbar
+                    currentList={this.state.currentList}
+                    isModalOpen={this.state.isModalOpen}
                     onAddSong={this.addAddSongTransaction}
                     canAddSong={canAddSong}
                     canUndo={canUndo}

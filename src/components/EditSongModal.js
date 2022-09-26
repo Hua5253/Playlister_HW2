@@ -15,12 +15,14 @@ export default class EditSongModal extends Component {
         let originSong = {title: song.title, artist: song.artist, youTubeId: song.youTubeId};
         let tempSong = {title: song.title, artist: song.artist, youTubeId: song.youTubeId};
 
+        // document.getElementById("song-card-title-input-" + index).value = song.title;
+
         return (
             <div 
                 className="modal" 
                 id="edit-song-modal" 
                 data-animation="slideInOutLeft">
-                    <div className="modal-root" id='verify-remove-song-root'>
+                    <div className="modal-root" id='verify-edit-song-root'>
                         <div className="modal-north">
                             Edit Song?
                         </div>
