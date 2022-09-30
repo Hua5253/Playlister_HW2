@@ -11,11 +11,6 @@ export default class EditSongModal extends Component {
         }
     }
 
-    ignoreParentClick = (event) => {
-        event.cancelBubble = true;
-        if (event.stopPropagation) event.stopPropagation();
-    }
-
     render() {
         const {songKey, tempSong, currentList, onEditSong, onHideEditSongModal } = this.props;
         if (!currentList) return null;
