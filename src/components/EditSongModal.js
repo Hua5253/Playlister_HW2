@@ -15,8 +15,6 @@ export default class EditSongModal extends Component {
         let originSong = {title: song.title, artist: song.artist, youTubeId: song.youTubeId};
         let tempSong = {title: song.title, artist: song.artist, youTubeId: song.youTubeId};
 
-        // document.getElementById("song-card-title-input-" + index).value = song.title;
-
         return (
             <div 
                 className="modal" 
