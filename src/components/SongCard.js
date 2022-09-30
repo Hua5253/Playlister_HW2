@@ -60,6 +60,7 @@ export default class SongCard extends React.Component {
 
     render() {
         const { song } = this.props;
+        let tempSong = {title: song.title, artist: song.artist, youTubeId: song.youTubeId};
         let link = "https://www.youtube.com/watch?v=" + song.youTubeId;
         let num = this.getItemNum();
         let songKey = {key: num-1};
@@ -79,7 +80,7 @@ export default class SongCard extends React.Component {
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
                 draggable="true"
-                onDoubleClick={() => this.props.onEditSong(songKey)}
+                onDoubleClick={() => this.props.onEditSong(songKey, tempSong)}
             >
                 <span
                     id={"song-card-text-" + num}

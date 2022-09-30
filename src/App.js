@@ -45,7 +45,8 @@ class App extends React.Component {
             songKeyMarked: 0,
             currentList : null,
             sessionData : loadedSessionData,
-            isModalOpen: false
+            isModalOpen: false,
+            tempSong: {title: "", artist: "", youTubeId: ""}
         }
     }
     sortKeyNamePairsByName = (keyNamePairs) => {
@@ -348,6 +349,7 @@ class App extends React.Component {
             this.db.mutationUpdateList(this.state.currentList);
         }
     }
+
     // THIS FUNCTION BEGINS THE PROCESS OF PERFORMING A REDO
     redo = () => {
         if (this.tps.hasTransactionToRedo()) {
@@ -371,12 +373,13 @@ class App extends React.Component {
     }
 
     // mark song for edit ->
-    markSongForEdit = (songKey) => {
+    markSongForEdit = (songKey, song) => {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,
             songKeyMarked: songKey,
-            sessionData: prevState.sessionData
+            sessionData: prevState.sessionData,
+            tempSong: song
         }), () => {
             this.showEditSongModal();
         })
@@ -436,11 +439,17 @@ class App extends React.Component {
 
     shortCut = () => {
         function keyPress(event, app) {
-                if (event.key === "z" && (event.ctrlKey || event.metaKey)) app.undo()
+                if (event.key === "z" && (event.ctrlKey || event.metaKey)) app.undo(); 
                 if (event.key === "y" && event.ctrlKey) app.redo();
         }
 
         document.onkeydown = (event) => keyPress(event, this);
+    }
+
+    handleSongChange = (e) => {
+        const tempSong = {...this.state.tempSong};
+        tempSong[e.currentTarget.name] = e.currentTarget.value;
+        this.setState({tempSong});
     }
 
     render() {
@@ -501,7 +510,9 @@ class App extends React.Component {
                 currentList={this.state.currentList}
                 onEditSong={this.addEditSongTransaction}
                 songKey={this.state.songKeyMarked}
+                tempSong={this.state.tempSong}
                 onHideEditSongModal={this.hideEditSongModal}
+                onHandleChange={this.handleSongChange}
                 />
             </div>
         );
